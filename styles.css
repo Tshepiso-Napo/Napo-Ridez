@@ -1,0 +1,78 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.container {
+    max-width: 450px;
+    margin: 80px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #ff006e;
+    margin-bottom: 40px;
+    font-size: 2rem;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"] {
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+
+button {
+    padding: 12px;
+    background: #ff006e;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #d0006f;
+}
+
+.role-selection {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 10px;
+}
+
+.password-instructions {
+    display: none;
+    font-size: 0.85rem;
+    color: #555;
+    background: #fff0f6;
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid #ff006e;
+}
+
+.switch-form {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #ff006e;
+}
