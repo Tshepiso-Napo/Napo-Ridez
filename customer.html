@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Napo Ridez - Customer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initCustomerMap" async defer></script>
+</head>
+<body data-role="Customer">
+  <div class="topbar">
+    <img src="logo-placeholder.png" alt="Napo Ridez Logo">
+    <h2>Customer</h2>
+    <div class="icons">
+      <span>🔔</span>
+      <span>👤</span>
+    </div>
+  </div>
+
+  <div class="search-bar">
+    <input type="text" placeholder="What are you looking for?">
+  </div>
+
+  <div class="categories">
+    <div class="category">🚗 Ridez</div>
+    <div class="category">🍔 Food</div>
+    <div class="category">🛒 Shop</div>
+    <div class="category">📦 Deliveriez</div>
+  </div>
+
+  <div class="featured">
+    <h2>🔥 Featured Vendors</h2>
+    <div class="cards">
+      <div class="card">
+        <img src="https://i.imgur.com/3YwGZpX.jpg" alt="Kota">
+        <p>Kota Palace</p>
+      </div>
+      <div class="card">
+        <img src="https://i.imgur.com/qTz2sLd.jpg" alt="Shisanyama">
+        <p>Kasi Shisanyama</p>
+      </div>
+      <div class="card">
+        <img src="https://i.imgur.com/8WxuO3C.jpg" alt="Spaza">
+        <p>Spaza Fresh</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="orders">
+    <h2>📦 Your Orders</h2>
+    <p>No active orders.</p>
+  </div>
+
+  <button class="ride-btn" id="requestRideBtn">🚖 Request a Ride</button>
+
+  <div id="map"></div>
+
+  <div class="bottom-nav">
+    <a href="#">🏠 Home</a>
+    <a href="#">📦 Orders</a>
+    <a href="#">💳 Wallet</a>
+    <a href="#">👤 Profile</a>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
