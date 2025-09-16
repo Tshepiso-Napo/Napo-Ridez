@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+  // LOGIN / REGISTRATION UI
   const roleButtons = document.querySelectorAll('.role-btn');
   const formContainer = document.getElementById('formContainer');
   const formTitle = document.getElementById('formTitle');
@@ -10,20 +12,48 @@ document.addEventListener('DOMContentLoaded', () => {
   let isLogin = true;
 
   const fields = {
-    Customer: [{ name: 'email', type: 'email', placeholder: 'Email' }, { name: 'password', type: 'password', placeholder: 'Password' }],
-    CustomerRegister: [{ name: 'name', type: 'text', placeholder: 'Full Name' }, { name: 'email', type: 'email', placeholder: 'Email' }, { name: 'phone', type: 'tel', placeholder: 'Phone Number' }, { name: 'password', type: 'password', placeholder: 'Password' }],
-    Vendor: [{ name: 'email', type: 'email', placeholder: 'Email' }, { name: 'password', type: 'password', placeholder: 'Password' }],
-    VendorRegister: [{ name: 'businessName', type: 'text', placeholder: 'Business Name' }, { name: 'ownerName', type: 'text', placeholder: 'Owner Name' }, { name: 'email', type: 'email', placeholder: 'Email' }, { name: 'phone', type: 'tel', placeholder: 'Phone Number' }, { name: 'businessType', type: 'text', placeholder: 'Business Type' }, { name: 'password', type: 'password', placeholder: 'Password' }],
-    Driver: [{ name: 'email', type: 'email', placeholder: 'Email' }, { name: 'password', type: 'password', placeholder: 'Password' }],
-    DriverRegister: [{ name: 'name', type: 'text', placeholder: 'Full Name' }, { name: 'email', type: 'email', placeholder: 'Email' }, { name: 'phone', type: 'tel', placeholder: 'Phone Number' }, { name: 'vehicleType', type: 'text', placeholder: 'Vehicle Type' }, { name: 'vehicleNumber', type: 'text', placeholder: 'Vehicle Number' }, { name: 'password', type: 'password', placeholder: 'Password' }]
+    Customer: [
+      { name: 'email', type: 'email', placeholder: 'Email' },
+      { name: 'password', type: 'password', placeholder: 'Password' }
+    ],
+    CustomerRegister: [
+      { name: 'name', type: 'text', placeholder: 'Full Name' },
+      { name: 'email', type: 'email', placeholder: 'Email' },
+      { name: 'phone', type: 'tel', placeholder: 'Phone Number' },
+      { name: 'password', type: 'password', placeholder: 'Password' }
+    ],
+    Vendor: [
+      { name: 'email', type: 'email', placeholder: 'Email' },
+      { name: 'password', type: 'password', placeholder: 'Password' }
+    ],
+    VendorRegister: [
+      { name: 'businessName', type: 'text', placeholder: 'Business Name' },
+      { name: 'ownerName', type: 'text', placeholder: 'Owner Name' },
+      { name: 'email', type: 'email', placeholder: 'Email' },
+      { name: 'phone', type: 'tel', placeholder: 'Phone Number' },
+      { name: 'businessType', type: 'text', placeholder: 'Business Type' },
+      { name: 'password', type: 'password', placeholder: 'Password' }
+    ],
+    Driver: [
+      { name: 'email', type: 'email', placeholder: 'Email' },
+      { name: 'password', type: 'password', placeholder: 'Password' }
+    ],
+    DriverRegister: [
+      { name: 'name', type: 'text', placeholder: 'Full Name' },
+      { name: 'email', type: 'email', placeholder: 'Email' },
+      { name: 'phone', type: 'tel', placeholder: 'Phone Number' },
+      { name: 'vehicleType', type: 'text', placeholder: 'Vehicle Type' },
+      { name: 'vehicleNumber', type: 'text', placeholder: 'Vehicle Number' },
+      { name: 'password', type: 'password', placeholder: 'Password' }
+    ]
   };
 
   function checkPasswordStrength(pw) {
     if (!pw || pw.length < 8) return { ok: false, msg: 'At least 8 characters' };
-    if (!/[A-Z]/.test(pw)) return { ok: false, msg: 'Include at least 1 uppercase letter' };
-    if (!/[a-z]/.test(pw)) return { ok: false, msg: 'Include at least 1 lowercase letter' };
-    if (!/[0-9]/.test(pw)) return { ok: false, msg: 'Include at least 1 number' };
-    if (!/[\W_]/.test(pw)) return { ok: false, msg: 'Include at least 1 special character' };
+    if (!/[A-Z]/.test(pw)) return { ok: false, msg: 'Include uppercase letter' };
+    if (!/[a-z]/.test(pw)) return { ok: false, msg: 'Include lowercase letter' };
+    if (!/[0-9]/.test(pw)) return { ok: false, msg: 'Include number' };
+    if (!/[\W_]/.test(pw)) return { ok: false, msg: 'Include special character' };
     return { ok: true, msg: 'Strong password ✅' };
   }
 
@@ -41,13 +71,15 @@ document.addEventListener('DOMContentLoaded', () => {
       input.required = true;
       roleForm.appendChild(input);
     });
+
     const submitBtn = document.createElement('button');
     submitBtn.type = 'submit';
     submitBtn.textContent = isLogin ? 'Login' : 'Register';
     roleForm.appendChild(submitBtn);
+
     formTitle.textContent = isLogin ? `${currentRole} Login` : `${currentRole} Registration`;
     switchLink.textContent = isLogin ? "Don't have an account? Sign Up" : "Already have an account? Login";
-    passwordInfo.textContent = isLogin ? '' : 'Password must be at least 8 characters, include uppercase, lowercase, number and special character.';
+    passwordInfo.textContent = isLogin ? '' : 'Password must be 8+ chars, uppercase, lowercase, number & special char';
 
     const pwd = roleForm.querySelector('input[name="password"]');
     if (pwd && !isLogin) {
@@ -83,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const data = {};
       new FormData(roleForm).forEach((v, k) => data[k] = v.trim());
-      if (!data.email || !data.password) { alert('Email and password required'); return; }
+      if (!data.email || !data.password) { alert('Email & password required'); return; }
 
       if (isLogin) {
         const users = getUsers();
@@ -97,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const pwCheck = checkPasswordStrength(data.password);
         if (!pwCheck.ok) { alert(pwCheck.msg); return; }
         const users = getUsers();
-        if (users.find(x => x.email === data.email && x.role === currentRole)) { alert('Email already registered'); return; }
+        if (users.find(x => x.email === data.email && x.role === currentRole)) { alert('Email already exists'); return; }
         const user = Object.assign({ role: currentRole, createdAt: Date.now() }, data);
         users.push(user);
         saveUsers(users);
@@ -110,72 +142,101 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  const roleOnPage = document.body.getAttribute('data-role');
+  const roleOnPage = document.body.getAttribute('data-role') || '';
+  if (Notification.permission !== 'granted') Notification.requestPermission();
 
+  // Google Maps Utility
   function placeMarker(map, latLng, title, icon) {
-    return new google.maps.Marker({ position: latLng, map: map, title, icon });
+    return new google.maps.Marker({ position: latLng, map: map, title, icon: icon || null });
   }
 
-  function simulateDriverMovement(marker, path, speed = 500) {
+  function simulateDriver(marker, path) {
     let i = 0;
     const id = setInterval(() => {
       if (i >= path.length) { clearInterval(id); return; }
       marker.setPosition(path[i]);
       i++;
-    }, speed);
-    return id;
+    }, 1000);
   }
 
-  async function fetchRides() {
-    try {
-      const res = await fetch('http://localhost:3000/get-rides');
-      return await res.json();
-    } catch { return []; }
-  }
-
-  async function initCustomerMap() {
+  // Customer map
+  window.initCustomerMap = function () {
     const mapEl = document.getElementById('map'); if (!mapEl) return;
     const map = new google.maps.Map(mapEl, { center: { lat: -26.2041, lng: 28.0473 }, zoom: 13 });
 
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(async pos => {
+      navigator.geolocation.getCurrentPosition(pos => {
         const lat = pos.coords.latitude, lng = pos.coords.longitude;
         map.setCenter({ lat, lng });
         placeMarker(map, { lat, lng }, 'You are here');
 
-        const rides = await fetchRides();
-        rides.filter(r => r.status === 'accepted').forEach(r => {
-          const driverMarker = placeMarker(map, { lat: lat + 0.005, lng: lng + 0.005 }, `Driver: ${r.driver}`, 'https://img.icons8.com/color/48/taxi.png');
-          const path = [
-            { lat: lat + 0.005, lng: lng + 0.005 },
-            { lat: lat + 0.004, lng: lng + 0.004 },
-            { lat, lng }
-          ];
-          simulateDriverMovement(driverMarker, path);
-        });
+        fetch('http://localhost:3000/get-rides')
+          .then(res => res.json())
+          .then(rides => {
+            rides.filter(r => r.status === 'accepted').forEach((r, idx) => {
+              const marker = placeMarker(map, { lat: lat + 0.005 + idx*0.001, lng: lng + 0.005 + idx*0.001 }, `Driver: ${r.driver}`, 'https://img.icons8.com/color/48/taxi.png');
+              const path = [
+                { lat: lat + 0.005 + idx*0.001, lng: lng + 0.005 + idx*0.001 },
+                { lat, lng }
+              ];
+              simulateDriver(marker, path);
+            });
+          });
       });
     }
 
     const reqBtn = document.getElementById('requestRideBtn');
-    if (reqBtn) reqBtn.addEventListener('click', async () => {
-      const passengerName = prompt('Your name:') || 'Customer';
-      const pickup = prompt('Pickup address or leave blank for current location') || 'Current Location';
-      const destination = prompt('Dropoff address') || 'Somewhere';
+    if (reqBtn) reqBtn.addEventListener('click', () => {
+      const pickup = prompt('Pickup address? (leave blank for current)');
+      const dropoff = prompt('Dropoff address');
+      alert('Ride request sent — finding driver...');
+    });
+  };
 
-      try {
-        const res = await fetch('http://localhost:3000/request-ride', {
+  // Vendor map
+  window.initVendorMap = function () {
+    const mapEl = document.getElementById('map'); if (!mapEl) return;
+    const map = new google.maps.Map(mapEl, { center: { lat: -26.2041, lng: 28.0473 }, zoom: 13 });
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(pos => {
+        const lat = pos.coords.latitude, lng = pos.coords.longitude;
+        map.setCenter({ lat, lng });
+        placeMarker(map, { lat, lng }, 'Your Shop');
+
+        fetch('http://localhost:3000/get-rides')
+          .then(res => res.json())
+          .then(rides => {
+            rides.filter(r => r.status === 'accepted').forEach((r, idx) => {
+              const marker = placeMarker(map, { lat: lat + 0.004 + idx*0.001, lng: lng + 0.004 + idx*0.001 }, `Driver: ${r.driver}`, 'https://img.icons8.com/color/48/delivery-scooter.png');
+              const path = [
+                { lat: lat + 0.004 + idx*0.001, lng: lng + 0.004 + idx*0.001 },
+                { lat, lng }
+              ];
+              simulateDriver(marker, path);
+            });
+          });
+      });
+    }
+
+    document.querySelectorAll('.order-card button').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const orderCard = btn.closest('.order-card');
+        const rideId = parseInt(orderCard.dataset.orderId || 0, 10);
+        const res = await fetch('http://localhost:3000/accept-ride', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ passengerName, pickup, destination })
+          body: JSON.stringify({ driverName: 'Thabo', rideId })
         });
         const data = await res.json();
-        if (res.ok) alert(`Ride requested! Ride ID: ${data.ride.id}`);
+        if (res.ok) alert(`Order #${rideId} accepted. Driver is on the way!`);
         else alert(`Error: ${data.error}`);
-      } catch { alert('Failed to request ride'); }
+      });
     });
-  }
+  };
 
-  async function initDriverMap() {
+  // Driver map
+  window.initDriverMap = function () {
     const mapEl = document.getElementById('map'); if (!mapEl) return;
     const map = new google.maps.Map(mapEl, { center: { lat: -26.2041, lng: 28.0473 }, zoom: 13 });
 
@@ -186,35 +247,32 @@ document.addEventListener('DOMContentLoaded', () => {
         const driverMarker = placeMarker(map, { lat, lng }, 'You (Driver)', 'https://img.icons8.com/color/48/car.png');
 
         document.querySelectorAll('.job-card button').forEach(btn => {
-          btn.addEventListener('click', async () => {
-            const rideId = parseInt(prompt('Enter Ride ID to accept'), 10);
-            const driverName = JSON.parse(localStorage.getItem('napoLoggedIn') || '{}').name || 'Driver';
+          btn.addEventListener('click', () => {
+            const text = btn.textContent || '';
+            const isRide = /Ride/i.test(text);
+            const isDelivery = /Delivery|Deliver/i.test(text);
 
-            try {
-              const res = await fetch('http://localhost:3000/accept-ride', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ driverName, rideId })
-              });
-              const data = await res.json();
-              if (res.ok) {
-                alert(`Ride accepted! Ride #${data.ride.id}`);
-                const path = [
-                  { lat: lat, lng: lng },
-                  { lat: lat + 0.002, lng: lng + 0.002 }
-                ];
-                simulateDriverMovement(driverMarker, path);
-              } else alert(`Error: ${data.error}`);
-            } catch { alert('Failed to accept ride'); }
+            if (isRide || isDelivery) {
+              alert(`${isRide ? 'Ride' : 'Delivery'} accepted`);
+              const path = isRide ? [
+                { lat: lat + 0.001, lng: lng + 0.001 },
+                { lat: lat + 0.002, lng: lng + 0.002 }
+              ] : [
+                { lat: lat - 0.001, lng: lng - 0.001 },
+                { lat: lat - 0.002, lng: lng - 0.002 }
+              ];
+              simulateDriver(driverMarker, path);
+            }
           });
         });
       });
     }
-  }
+  };
 
-  window.initMap = function() {
-    const role = document.body.getAttribute('data-role');
+  window.initMap = function () {
+    const role = document.body.getAttribute('data-role') || '';
     if (role === 'Customer') initCustomerMap();
+    else if (role === 'Vendor') initVendorMap();
     else if (role === 'Driver') initDriverMap();
   };
 });
