@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Napo Ridez - Driver</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initDriverMap" async defer></script>
 </head>
@@ -18,27 +17,23 @@
     </div>
   </div>
 
-  <div class="dashboard">
-    <div class="stat"><h3>Jobs Today</h3><p>6</p></div>
-    <div class="stat"><h3>Earnings</h3><p>R450</p></div>
-    <div class="stat"><h3>Status</h3><p>Available ✅</p></div>
+  <div class="job-list">
+    <h2>Available Rides & Deliveries</h2>
+    <div class="job-card">
+      <p>Ride #101 - Pickup: ABC, Dropoff: XYZ</p>
+      <button>Accept Ride</button>
+    </div>
+    <div class="job-card">
+      <p>Delivery #201 - Vendor: Pizza Place</p>
+      <button>Accept Delivery</button>
+    </div>
   </div>
 
-  <div class="requests">
-    <h2>🆕 New Requests</h2>
-    <div class="job-card"><p><strong>Delivery</strong> - Order #2031</p><p>Pickup: Kasi Shisanyama 🏪</p><p>Dropoff: 45 Vilakazi Street 🏠</p><button>Accept Delivery</button></div>
-    <div class="job-card"><p><strong>Ride</strong> - Request #509</p><p>Pickup: Carlton Centre 📍</p><p>Dropoff: Soweto Theatre 🎭</p><button>Accept Ride</button></div>
-  </div>
-
-  <div class="active-job">
-    <h2>🚗 Active Job</h2>
-    <div class="job-card"><p>Delivery for Order #2028</p><p>Vendor: Kota Palace 🏪</p><p>Customer: 12 Mofolo Street 🏠</p></div>
-    <div id="map"></div>
-  </div>
+  <div id="map" style="height: 500px;"></div>
 
   <div class="bottom-nav">
     <a href="#">🏠 Dashboard</a>
-    <a href="#">📦 Jobs</a>
+    <a href="#">🛵 Jobs</a>
     <a href="#">💰 Earnings</a>
     <a href="#">👤 Profile</a>
   </div>
