@@ -26,14 +26,14 @@
 
   <div class="orders">
     <h2>🆕 New Orders</h2>
-    <div class="order-card"><p>Order #1024</p><p>2x Kota, 1x Coke</p><button>Accept Order</button></div>
-    <div class="order-card"><p>Order #1025</p><p>1x Shisanyama Plate</p><button>Accept Order</button></div>
+    <div class="order-card" data-order-id="1024"><p>Order #1024</p><p>2x Kota, 1x Coke</p><button>Accept Order</button></div>
+    <div class="order-card" data-order-id="1025"><p>Order #1025</p><p>1x Shisanyama Plate</p><button>Accept Order</button></div>
   </div>
 
   <div class="active-orders">
     <h2>🚚 Active Orders</h2>
-    <div class="order-card"><p>Order #1020 - Out for Delivery</p><p>Driver: Thabo</p></div>
-    <div id="map"></div>
+    <div class="order-card" data-order-id="1020"><p>Order #1020 - Out for Delivery</p><p>Driver: Thabo</p></div>
+    <div id="map" style="height: 400px; width: 100%; margin-top: 10px;"></div>
   </div>
 
   <div class="bottom-nav">
@@ -43,6 +43,69 @@
     <a href="#">👤 Profile</a>
   </div>
 
-  <script src="app.js"></script>
+  <script>
+    async function initVendorMap() {
+      const mapEl = document.getElementById('map');
+      if (!mapEl) return;
+
+      const map = new google.maps.Map(mapEl, { center: { lat: -26.2041, lng: 28.0473 }, zoom: 13 });
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+          const lat = pos.coords.latitude, lng = pos.coords.longitude;
+          map.setCenter({ lat, lng });
+          const shopMarker = new google.maps.Marker({ position: { lat, lng }, map: map, title: 'Your Shop' });
+
+          // Load active deliveries from backend simulation
+          fetch('http://localhost:3000/get-rides')
+            .then(res => res.json())
+            .then(rides => {
+              rides.filter(r => r.status === 'accepted').forEach((r, idx) => {
+                const driverMarker = new google.maps.Marker({
+                  position: { lat: lat + 0.004 + idx*0.001, lng: lng + 0.004 + idx*0.001 },
+                  map: map,
+                  title: `Driver: ${r.driver}`,
+                  icon: 'https://img.icons8.com/color/48/delivery-scooter.png'
+                });
+
+                // Animate driver moving towards shop
+                const path = [
+                  { lat: lat + 0.004 + idx*0.001, lng: lng + 0.004 + idx*0.001 },
+                  { lat: lat + 0.002, lng: lng + 0.002 },
+                  { lat, lng }
+                ];
+                let i = 0;
+                const id = setInterval(() => {
+                  if (i >= path.length) { clearInterval(id); return; }
+                  driverMarker.setPosition(path[i]);
+                  i++;
+                }, 1000);
+              });
+            });
+        });
+      }
+
+      // Accept order buttons
+      document.querySelectorAll('.order-card button').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const orderCard = btn.closest('.order-card');
+          const orderId = parseInt(orderCard.dataset.orderId, 10);
+
+          try {
+            const res = await fetch('http://localhost:3000/accept-ride', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ driverName: 'Thabo', rideId: orderId })
+            });
+            const data = await res.json();
+            if (res.ok) alert(`Order #${orderId} accepted. Driver is on the way!`);
+            else alert(`Error: ${data.error}`);
+          } catch {
+            alert('Failed to accept order');
+          }
+        });
+      });
+    }
+  </script>
 </body>
 </html>
