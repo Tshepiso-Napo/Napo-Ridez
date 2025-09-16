@@ -1,6 +1,4 @@
-// app.js
 document.addEventListener('DOMContentLoaded', () => {
-  /* Index login/register UI (index.html) */
   const roleButtons = document.querySelectorAll('.role-btn');
   const formContainer = document.getElementById('formContainer');
   const formTitle = document.getElementById('formTitle');
@@ -29,9 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return { ok: true, msg: 'Strong password ✅' };
   }
 
-  function getUsers() {
-    try { return JSON.parse(localStorage.getItem('napoUsers') || '[]'); } catch { return []; }
-  }
+  function getUsers() { try { return JSON.parse(localStorage.getItem('napoUsers') || '[]'); } catch { return []; } }
   function saveUsers(users) { localStorage.setItem('napoUsers', JSON.stringify(users)); }
 
   function renderForm() {
@@ -52,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
     formTitle.textContent = isLogin ? `${currentRole} Login` : `${currentRole} Registration`;
     switchLink.textContent = isLogin ? "Don't have an account? Sign Up" : "Already have an account? Login";
     passwordInfo.textContent = isLogin ? '' : 'Password must be at least 8 characters, include uppercase, lowercase, number and special character.';
-    // show live validation for password on register form
+
     const pwd = roleForm.querySelector('input[name="password"]');
     if (pwd && !isLogin) {
       const feedback = document.createElement('div');
@@ -87,19 +83,13 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const data = {};
       new FormData(roleForm).forEach((v, k) => data[k] = v.trim());
-      if (!data.email || !data.password) {
-        alert('Email and password required');
-        return;
-      }
+      if (!data.email || !data.password) { alert('Email and password required'); return; }
+
       if (isLogin) {
         const users = getUsers();
         const u = users.find(x => x.email === data.email && x.password === data.password && x.role === currentRole);
-        if (!u) {
-          alert('Invalid credentials for ' + currentRole);
-          return;
-        }
+        if (!u) { alert('Invalid credentials'); return; }
         localStorage.setItem('napoLoggedIn', JSON.stringify(u));
-        if (Notification.permission !== 'granted') Notification.requestPermission();
         if (currentRole === 'Customer') window.location.href = 'customer.html';
         else if (currentRole === 'Vendor') window.location.href = 'vendor.html';
         else window.location.href = 'driver.html';
@@ -107,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const pwCheck = checkPasswordStrength(data.password);
         if (!pwCheck.ok) { alert(pwCheck.msg); return; }
         const users = getUsers();
-        if (users.find(x => x.email === data.email && x.role === currentRole)) { alert('Email already registered for this role'); return; }
+        if (users.find(x => x.email === data.email && x.role === currentRole)) { alert('Email already registered'); return; }
         const user = Object.assign({ role: currentRole, createdAt: Date.now() }, data);
         users.push(user);
         saveUsers(users);
@@ -120,150 +110,111 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* Dashboards maps + interactions for customer.html, vendor.html, driver.html */
-  const roleOnPage = document.body.getAttribute('data-role') || document.querySelector('[data-role]') && document.querySelector('[data-role]').getAttribute('data-role');
+  const roleOnPage = document.body.getAttribute('data-role');
 
-  if (roleOnPage) {
-    if (Notification.permission !== 'granted') Notification.requestPermission();
-  }
-
-  // utility to create map using google.maps API (pages load Google Maps script with callbacks)
   function placeMarker(map, latLng, title, icon) {
-    return new google.maps.Marker({ position: latLng, map: map, title: title, icon: icon || null });
+    return new google.maps.Marker({ position: latLng, map: map, title, icon });
   }
 
-  // simulation helpers
-  function simulateDriverMovement(marker, path, speed = 0.00005) {
+  function simulateDriverMovement(marker, path, speed = 500) {
     let i = 0;
     const id = setInterval(() => {
       if (i >= path.length) { clearInterval(id); return; }
       marker.setPosition(path[i]);
       i++;
-    }, 500);
+    }, speed);
     return id;
   }
 
-  // global small store for simulated drivers/orders
-  if (!localStorage.getItem('napoSim')) {
-    const sim = { drivers: [] };
-    localStorage.setItem('napoSim', JSON.stringify(sim));
+  async function fetchRides() {
+    try {
+      const res = await fetch('http://localhost:3000/get-rides');
+      return await res.json();
+    } catch { return []; }
   }
 
-  // expose callbacks for maps (customer/vendor/driver) - these names match the script callbacks in your HTML
-  window.initCustomerMap = function initCustomerMap() {
-    const mapEl = document.getElementById('map');
-    if (!mapEl) return;
+  async function initCustomerMap() {
+    const mapEl = document.getElementById('map'); if (!mapEl) return;
     const map = new google.maps.Map(mapEl, { center: { lat: -26.2041, lng: 28.0473 }, zoom: 13 });
+
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(pos => {
+      navigator.geolocation.getCurrentPosition(async pos => {
         const lat = pos.coords.latitude, lng = pos.coords.longitude;
         map.setCenter({ lat, lng });
-        const customerMarker = placeMarker(map, { lat, lng }, 'You are here');
-        // show nearby drivers (simulated)
-        const sim = JSON.parse(localStorage.getItem('napoSim') || '{}');
-        sim.drivers = sim.drivers.length ? sim.drivers : [
-          { id: 'd1', lat: lat + 0.006, lng: lng + 0.006 },
-          { id: 'd2', lat: lat - 0.005, lng: lng - 0.007 }
-        ];
-        sim.drivers.forEach(d => {
-          placeMarker(map, { lat: d.lat, lng: d.lng }, 'Driver', 'https://img.icons8.com/color/48/taxi.png');
+        placeMarker(map, { lat, lng }, 'You are here');
+
+        const rides = await fetchRides();
+        rides.filter(r => r.status === 'accepted').forEach(r => {
+          const driverMarker = placeMarker(map, { lat: lat + 0.005, lng: lng + 0.005 }, `Driver: ${r.driver}`, 'https://img.icons8.com/color/48/taxi.png');
+          const path = [
+            { lat: lat + 0.005, lng: lng + 0.005 },
+            { lat: lat + 0.004, lng: lng + 0.004 },
+            { lat, lng }
+          ];
+          simulateDriverMovement(driverMarker, path);
         });
-        localStorage.setItem('napoSim', JSON.stringify(sim));
-      }, () => {
-        // fallback
       });
     }
-    // request button binding
+
     const reqBtn = document.getElementById('requestRideBtn');
-    if (reqBtn) {
-      reqBtn.addEventListener('click', () => {
-        const pickup = prompt('Pickup address or current location? (leave blank for current)');
-        const dropoff = prompt('Dropoff address (street / place)');
-        if (!dropoff && !pickup) { alert('Please provide dropoff; using simulated request'); }
-        alert('Request sent — searching for driver...');
-        if (Notification.permission === 'granted') new Notification('Request Sent', { body: 'Finding drivers near you...' });
-        // simulate driver assigned and moving
-        setTimeout(() => {
-          if (Notification.permission === 'granted') new Notification('Driver Assigned', { body: 'Thabo is 3 mins away' });
-          alert('Driver Thabo assigned - arriving soon');
-        }, 1800);
-      });
-    }
-  };
+    if (reqBtn) reqBtn.addEventListener('click', async () => {
+      const passengerName = prompt('Your name:') || 'Customer';
+      const pickup = prompt('Pickup address or leave blank for current location') || 'Current Location';
+      const destination = prompt('Dropoff address') || 'Somewhere';
 
-  window.initVendorMap = function initVendorMap() {
-    const mapEl = document.getElementById('map');
-    if (!mapEl) return;
-    const map = new google.maps.Map(mapEl, { center: { lat: -26.2041, lng: 28.0473 }, zoom: 13 });
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(pos => {
-        const lat = pos.coords.latitude, lng = pos.coords.longitude;
-        map.setCenter({ lat, lng });
-        placeMarker(map, { lat, lng }, 'Your Shop');
-        // simulate active deliveries markers
-        placeMarker(map, { lat: lat + 0.004, lng: lng + 0.004 }, 'Driver delivering', 'https://img.icons8.com/color/48/delivery-scooter.png');
-      });
-    }
-    // Accept Order buttons: when clicked, notify driver simulation
-    document.querySelectorAll('.order-card button').forEach((btn, idx) => {
-      btn.addEventListener('click', () => {
-        alert('Order accepted. Assigning driver...');
-        if (Notification.permission === 'granted') new Notification('Order Accepted', { body: 'Driver is on the way to your shop.' });
-      });
+      try {
+        const res = await fetch('http://localhost:3000/request-ride', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ passengerName, pickup, destination })
+        });
+        const data = await res.json();
+        if (res.ok) alert(`Ride requested! Ride ID: ${data.ride.id}`);
+        else alert(`Error: ${data.error}`);
+      } catch { alert('Failed to request ride'); }
     });
-  };
+  }
 
-  window.initDriverMap = function initDriverMap() {
-    const mapEl = document.getElementById('map');
-    if (!mapEl) return;
+  async function initDriverMap() {
+    const mapEl = document.getElementById('map'); if (!mapEl) return;
     const map = new google.maps.Map(mapEl, { center: { lat: -26.2041, lng: 28.0473 }, zoom: 13 });
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(pos => {
         const lat = pos.coords.latitude, lng = pos.coords.longitude;
         map.setCenter({ lat, lng });
         const driverMarker = placeMarker(map, { lat, lng }, 'You (Driver)', 'https://img.icons8.com/color/48/car.png');
-        // Accept Ride/Delivery buttons on driver page
+
         document.querySelectorAll('.job-card button').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const text = btn.textContent || '';
-            const isRide = /Ride/i.test(text);
-            const isDelivery = /Delivery|Deliver/i.test(text);
-            if (isRide) {
-              alert('Ride accepted. Navigate to pickup.');
-              if (Notification.permission === 'granted') new Notification('Ride Accepted', { body: 'Navigate to pickup location.' });
-              // simulate route: move marker a bit
-              const path = [
-                { lat: lat + 0.001, lng: lng + 0.001 },
-                { lat: lat + 0.002, lng: lng + 0.002 },
-                { lat: lat + 0.003, lng: lng + 0.002 }
-              ];
-              simulateDriverMovement(driverMarker, path);
-            } else if (isDelivery) {
-              alert('Delivery accepted. Navigate to vendor.');
-              if (Notification.permission === 'granted') new Notification('Delivery Accepted', { body: 'Pickup at vendor.' });
-              const path = [
-                { lat: lat - 0.001, lng: lng - 0.001 },
-                { lat: lat - 0.002, lng: lng - 0.002 }
-              ];
-              simulateDriverMovement(driverMarker, path);
-            } else {
-              alert('Job accepted');
-            }
+          btn.addEventListener('click', async () => {
+            const rideId = parseInt(prompt('Enter Ride ID to accept'), 10);
+            const driverName = JSON.parse(localStorage.getItem('napoLoggedIn') || '{}').name || 'Driver';
+
+            try {
+              const res = await fetch('http://localhost:3000/accept-ride', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ driverName, rideId })
+              });
+              const data = await res.json();
+              if (res.ok) {
+                alert(`Ride accepted! Ride #${data.ride.id}`);
+                const path = [
+                  { lat: lat, lng: lng },
+                  { lat: lat + 0.002, lng: lng + 0.002 }
+                ];
+                simulateDriverMovement(driverMarker, path);
+              } else alert(`Error: ${data.error}`);
+            } catch { alert('Failed to accept ride'); }
           });
         });
-      }, () => {
-        // fallback
       });
     }
-  };
+  }
 
-  // If maps script loads with a generic callback name, attempt to init based on page role
-  window.initMap = function initMap() {
-    const role = document.body.getAttribute('data-role') || '';
+  window.initMap = function() {
+    const role = document.body.getAttribute('data-role');
     if (role === 'Customer') initCustomerMap();
-    else if (role === 'Vendor') initVendorMap();
     else if (role === 'Driver') initDriverMap();
   };
-
-  if (Notification.permission !== 'granted') Notification.requestPermission();
 });
