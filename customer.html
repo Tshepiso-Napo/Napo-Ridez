@@ -1,34 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Napo Ridez - Customer</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initCustomerMap" async defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Napo Ridez - Customer</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+body { margin:0; font-family:'Inter', sans-serif; background:#f5f5f5; color:#333; }
+.topbar { display:flex; justify-content:space-between; align-items:center; padding:15px; background:#1e1e1e; color:#fff; position:fixed; width:100%; top:0; z-index:100; }
+.topbar img { height:40px; }
+.topbar h2 { margin:0; font-weight:600; font-size:18px; flex:1; text-align:center; }
+.icons { display:flex; align-items:center; gap:12px; }
+.notif-icon { font-size:22px; cursor:pointer; }
+.cart-icon { position:relative; cursor:pointer; font-size:24px; }
+.cart-badge { position:absolute; top:-5px; right:-10px; background:#ff4b2b; color:#fff; border-radius:50%; padding:2px 6px; font-size:12px; }
+.main-content { padding:90px 15px 100px; }
+.hero { background:#ff4b2b; border-radius:15px; color:#fff; padding:20px; margin-bottom:15px; }
+.hero h3 { margin:0 0 5px; font-size:20px; }
+.hero p { margin:0; font-size:14px; }
+.hero-carousel { display:flex; overflow-x:auto; gap:10px; margin-top:10px; }
+.hero-carousel::-webkit-scrollbar { display:none; }
+.card { min-width:140px; background:#fff; border-radius:12px; padding:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); text-align:center; cursor:pointer; }
+.card img { width:100%; border-radius:10px; margin-bottom:5px; }
+.card h4 { margin:5px 0 2px; font-size:14px; }
+.card p { font-size:12px; margin:0; color:#777; }
+.quick-actions { display:flex; gap:10px; margin-bottom:15px; }
+.quick-actions button { flex:1; padding:15px; border:none; border-radius:12px; background:#fff; font-weight:600; font-size:14px; box-shadow:0 2px 5px rgba(0,0,0,0.1); cursor:pointer; display:flex; flex-direction:column; align-items:center; }
+.quick-actions button span { font-size:24px; margin-bottom:5px; }
+.section-title { font-weight:600; margin:10px 0; font-size:16px; }
+.horizontal-scroll { display:flex; overflow-x:auto; gap:10px; padding-bottom:5px; }
+.horizontal-scroll::-webkit-scrollbar { display:none; }
+section { display:none; }
+section.active { display:block; }
+.bottom-nav { display:flex; justify-content:space-around; align-items:center; position:fixed; bottom:0; width:100%; background:#fff; border-top:1px solid #ddd; padding:8px 0; }
+.bottom-nav a { display:flex; flex-direction:column; align-items:center; text-decoration:none; color:#333; font-size:12px; }
+.bottom-nav a span { font-size:20px; margin-bottom:2px; }
+input, select, textarea, button { width:100%; margin:5px 0; padding:10px; border-radius:8px; border:1px solid #ccc; box-sizing:border-box; }
+button { background:#ff4b2b; color:#fff; border:none; cursor:pointer; }
+.modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:200; }
+.modal-content { background:#fff; padding:20px; border-radius:12px; max-width:400px; width:90%; max-height:80%; overflow-y:auto; }
+.close-modal { float:right; cursor:pointer; font-weight:bold; font-size:18px; }
+</style>
 </head>
-<body data-role="Customer">
-  <div class="topbar">
-    <img src="logo-placeholder.png" alt="Napo Ridez Logo">
-    <h2>Customer</h2>
-    <div class="icons">
-      <span>🔔</span>
-      <span>👤</span>
-    </div>
+<body>
+
+<div class="topbar">
+<img src="Images/IMG_20250912_035555_769.jpg" alt="Napo Ridez Logo">
+  <h2>Hi, Michael!</h2>
+  <div class="icons">
+    <div class="notif-icon" id="notifIcon">🔔</div>
+    <div class="cart-icon" id="cartIcon">🛒<span class="cart-badge" id="cartCount">0</span></div>
+  </div>
+</div>
+
+<div class="main-content" id="dashboard">
+  <div class="hero">
+    <h3>Welcome Back!</h3>
+    <p>Check out trending deals and specials near you</p>
+    <div class="hero-carousel" id="heroCarousel"></div>
   </div>
 
-  <div class="dashboard">
-    <button id="requestRideBtn">Request Ride</button>
+  <div class="quick-actions">
+    <button data-target="vendorMarketplace"><span>🛍️</span>Vendors</button>
+    <button data-target="rideOptions"><span>🚖</span>Ride</button>
+    <button data-target="specialsSection"><span>🔥</span>Specials</button>
   </div>
 
-  <div id="map" style="height: 500px;"></div>
+  <div class="section-title">Trending Near You</div>
+  <div class="horizontal-scroll" id="trendingSection"></div>
 
-  <div class="bottom-nav">
-    <a href="#">🏠 Dashboard</a>
-    <a href="#">🛵 Rides</a>
-    <a href="#">👤 Profile</a>
+  <div class="section-title">Recommended for You</div>
+  <div class="horizontal-scroll" id="recommendedSection"></div>
+</div>
+
+<section id="vendorMarketplace">
+  <h3>Vendor Marketplace</h3>
+  <input type="text" id="searchVendors" placeholder="Search vendors by name, category, price, rating...">
+  <div class="horizontal-scroll" id="vendorList"></div>
+</section>
+
+<section id="rideOptions">
+  <h3>Request a Ride</h3>
+  <select id="rideType">
+    <option value="standard">Standard</option>
+    <option value="luxury">Luxury</option>
+    <option value="bike">Bike</option>
+    <option value="van">Delivery Van</option>
+  </select>
+  <button id="fareEstimateBtn">Get Fare Estimate</button>
+  <div id="fareEstimate"></div>
+  <button id="scheduleRideBtn">Schedule Ride</button>
+</section>
+
+<section id="cartSection">
+  <h3>Your Cart</h3>
+  <div id="cartItems"></div>
+  <textarea id="deliveryInstructions" placeholder="Add delivery instructions, pin location, or notes..."></textarea>
+  <select id="paymentOptions">
+    <option value="cash">Cash</option>
+    <option value="card">Card</option>
+    <option value="wallet">Wallet</option>
+    <option value="mobileMoney">Mobile Money</option>
+  </select>
+  <button id="checkoutBtn">Checkout</button>
+</section>
+
+<div class="bottom-nav">
+  <a href="#" data-target="dashboard"><span>🏠</span>Home</a>
+  <a href="#" data-target="vendorMarketplace"><span>🛍️</span>Vendors</a>
+  <a href="#" data-target="rideOptions"><span>🚖</span>Rides</a>
+  <a href="#" data-target="cartSection"><span>🛒</span>Cart</a>
+  <a href="#" data-target="profileSettings"><span>👤</span>Profile</a>
+</div>
+
+<div class="modal" id="vendorModal">
+  <div class="modal-content">
+    <span class="close-modal" id="closeModal">&times;</span>
+    <h3 id="modalVendorName"></h3>
+    <div id="modalVendorMenu"></div>
   </div>
+</div>
 
-  <script src="app.js"></script>
+<script>
+const buttons = document.querySelectorAll("[data-target]");
+const sections = document.querySelectorAll("section");
+const dashboard = document.getElementById("dashboard");
+const cartCount = document.getElementById("cartCount");
+const cartItems = document.getElementById("cartItems");
+let count = 0;
+
+buttons.forEach(btn=>{
+  btn.addEventListener("click", e=>{
+    e.preventDefault();
+    const target = btn.getAttribute("data-target");
+    sections.forEach(sec=>sec.classList.remove("active"));
+    dashboard.style.display = target==="dashboard"?"block":"none";
+    if(target!=="dashboard") document.getElementById(target).classList.add("active");
+  });
+});
+
+function addToCart(itemName){
+  count++;
+  cartCount.textContent = count;
+  const item = document.createElement("p");
+  item.textContent = itemName;
+  cartItems.appendChild(item);
+}
+
+document.getElementById("cartIcon").addEventListener("click",()=>{
+  dashboard.style.display="none";
+  sections.forEach(sec=>sec.classList.remove("active"));
+  document.getElementById("cartSection").classList.add("active");
+});
+
+// Dynamic sections
+const trendingSection = document.getElementById("trendingSection");
+const recommendedSection = document.getElementById("recommendedSection");
+const heroCarousel = document.getElementById("heroCarousel");
+const vendorList = document.getElementById("vendorList");
+const vendors = [
+  {name:"Pizza Shop", rating:4.8, menu:["Pepperoni","Margherita"]},
+  {name:"Grocery Store", rating:4.7, menu:["Milk","Eggs","Bread"]},
+  {name:"Coffee House", rating:4.6, menu:["Latte","Cappuccino"]}
+];
+function populateSections(){
+  heroCarousel.innerHTML = "";
+  trendingSection.innerHTML = "";
+  recommendedSection.innerHTML = "";
+  vendorList.innerHTML = "";
+  vendors.forEach(v=>{
+    const card = document.createElement("div");
+    card.className="card";
+    card.innerHTML=`<img src="https://via.placeholder.com/120x80" alt=""><h4>${v.name}</h4><p>⭐ ${v.rating}</p>`;
+    card.onclick = ()=>openVendorModal(v);
+    trendingSection.appendChild(card);
+    recommendedSection.appendChild(card.cloneNode(true));
+    vendorList.appendChild(card.cloneNode(true));
+  });
+}
+populateSections();
+
+// Modal
+const modal = document.getElementById("vendorModal");
+const modalVendorName = document.getElementById("modalVendorName");
+const modalVendorMenu = document.getElementById("modalVendorMenu");
+function openVendorModal(vendor){
+  modal.style.display="flex";
+  modalVendorName.textContent = vendor.name;
+  modalVendorMenu.innerHTML="";
+  vendor.menu.forEach(item=>{
+    const p = document.createElement("p");
+    p.textContent = item+" ";
+    const btn = document.createElement("button");
+    btn.textContent="Add to Cart";
+    btn.onclick=()=>addToCart(item);
+    p.appendChild(btn);
+    modalVendorMenu.appendChild(p);
+  });
+}
+document.getElementById("closeModal").onclick=()=>modal.style.display="none";
+window.onclick=e=>{if(e.target==modal) modal.style.display="none";}
+</script>
 </body>
 </html>
