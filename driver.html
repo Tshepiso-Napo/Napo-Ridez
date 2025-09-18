@@ -1,43 +1,213 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Napo Ridez - Driver</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initDriverMap" async defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Napo Ridez - Driver Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Roboto',sans-serif;}
+body{background:#f5f5f5;color:#333;padding-bottom:120px;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:15px 20px;background:#3a0ca3;color:#fff;position:fixed;top:0;width:100%;z-index:100;border-bottom:2px solid #ffbe0b;border-radius:0 0 12px 12px;}
+.topbar img{width:50px;border-radius:50%;}
+.topbar h2{flex:1;text-align:center;font-size:20px;font-weight:700;}
+.icons{display:flex;gap:15px;font-size:22px;cursor:pointer;position:relative;}
+.icons span{position:relative;}
+.icons .badge{position:absolute;top:-8px;right:-8px;background:#ff4b2b;color:#fff;border-radius:50%;padding:2px 6px;font-size:12px;}
+.dashboard{margin-top:90px;padding:15px;display:none;}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:15px;margin-bottom:25px;}
+.card{background:#fff;border-radius:15px;padding:15px;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,0.1);}
+.card h3{font-size:1.4rem;color:#e63946;margin-bottom:5px;}
+.card p{color:#555;font-size:0.9rem;}
+.section-title{margin:20px 0 10px;font-size:1.3rem;color:#3a0ca3;font-weight:700;}
+.section{margin-bottom:20px;}
+.job-card{background:#fff;border-radius:15px;padding:15px;margin-bottom:15px;box-shadow:0 4px 10px rgba(0,0,0,0.05);}
+.job-card h4{margin-bottom:5px;}
+.job-card p{margin-bottom:8px;color:#555;font-size:0.9rem;}
+.job-card .badge{display:inline-block;padding:3px 8px;border-radius:8px;font-size:0.8rem;color:#fff;margin-bottom:8px;}
+.badge.ride{background:#0077b6;}
+.badge.delivery{background:#ffbe0b;}
+.job-card button{background:#3a0ca3;color:#fff;border:none;padding:6px 10px;border-radius:8px;cursor:pointer;margin-right:5px;margin-bottom:5px;}
+.job-card button:hover{background:#7209b7;}
+#map{height:250px;width:100%;border-radius:12px;margin-top:10px;display:none;}
+#chatModal{display:none;position:fixed;bottom:10px;right:10px;width:320px;background:#fff;border:1px solid #ccc;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.3);z-index:200;padding:10px;}
+#chatHeader{font-weight:bold;margin-bottom:5px;text-align:center;}
+#chatMessages{height:200px;overflow-y:auto;border-bottom:1px solid #eee;padding-bottom:5px;margin-bottom:5px;}
+.chat-message{margin:5px 0;padding:6px 10px;border-radius:12px;}
+.chat-customer{background:#f1f1f1;text-align:left;}
+.chat-driver{background:#3a0ca3;color:#fff;text-align:right;}
+#chatInput,#sendChatBtn{width:100%;padding:6px;border-radius:8px;border:1px solid #ccc;margin-bottom:5px;}
+#sendChatBtn{background:#3a0ca3;color:#fff;border:none;}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-around;background:#fff;border-top:1px solid #ddd;padding:10px 0;}
+.bottom-nav a{text-decoration:none;color:#333;font-size:0.9rem;display:flex;flex-direction:column;align-items:center;}
+.bottom-nav a span{margin-top:2px;}
+.profile-photo-section img{width:100px;height:100px;border-radius:50%;display:block;margin-bottom:10px;object-fit:cover;}
+#driverApplication,#pendingMessage{padding:20px;max-width:600px;margin:50px auto;background:#fff;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1);}
+#driverApplication input, #driverApplication button,#driverApplication label{width:100%;margin-bottom:10px;padding:10px;border-radius:8px;border:1px solid #ccc;}
+#driverApplication button{background:#3a0ca3;color:#fff;border:none;font-weight:bold;cursor:pointer;}
+#pendingMessage{text-align:center;display:none;}
+</style>
 </head>
-<body data-role="Driver">
+<body>
+
+<!-- Driver Application -->
+<div id="driverApplication">
+  <h2>Driver Application</h2>
+  <form id="applicationForm">
+    <input type="text" name="fullName" placeholder="Full Name" required>
+    <input type="text" name="address" placeholder="Address / Area" required>
+    <input type="text" name="idNumber" placeholder="ID Number" required>
+    <input type="text" name="vehicleName" placeholder="Vehicle Name & Model" required>
+    <input type="text" name="plateNumber" placeholder="Plate Number" required>
+    <label>Upload Vehicle Photo:</label>
+    <input type="file" name="vehiclePhoto" accept="image/*" required>
+    <label>Upload Driver License</label>
+    a<input type="file" name="licensePhoto" accept="image/*" required>
+    <label>Upload Headshot Photo:</label>
+    <input type="file" name="headshotPhoto" accept="image/*" required>
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="tel" name="phone" placeholder="Phone Number" required>
+    <button type="submit">Submit Application</button>
+  </form>
+</div>
+
+<!-- Pending Message -->
+<div id="pendingMessage">
+  <h2>Application Submitted</h2>
+  <p>Your application is under review. Review may take up to 7 days. You will be notified once approved.</p>
+</div>
+
+<!-- Dashboard -->
+<div class="dashboard">
   <div class="topbar">
-    <img src="logo-placeholder.png" alt="Napo Ridez Logo">
-    <h2>Driver</h2>
+    <img src="logo-placeholder.png" alt="Logo">
+    <h2 id="driverName">Driver Name</h2>
     <div class="icons">
-      <span>🔔</span>
-      <span>👤</span>
+      <span id="notifications">🔔<span class="badge" id="notifCount">2</span></span>
+      <span id="profileBtn">👤</span>
     </div>
   </div>
 
-  <div class="job-list">
-    <h2>Available Rides & Deliveries</h2>
-    <div class="job-card">
-      <p>Ride #101 - Pickup: ABC, Dropoff: XYZ</p>
-      <button>Accept Ride</button>
-    </div>
-    <div class="job-card">
-      <p>Delivery #201 - Vendor: Pizza Place</p>
-      <button>Accept Delivery</button>
+  <div class="stats">
+    <div class="card"><h3>3</h3><p>Active Jobs</p></div>
+    <div class="card"><h3>R950</h3><p>Today Earnings</p></div>
+    <div class="card"><h3>5</h3><p>Completed Rides</p></div>
+    <div class="card"><h3>2</h3><p>Completed Deliveries</p></div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">🚦 Active Jobs</h2>
+    <div id="activeJobs">
+      <div class="job-card" data-job-id="101">
+        <h4>Ride #101 - Thabo</h4>
+        <p>Pickup: ABC | Dropoff: XYZ</p>
+        <span class="badge ride">RIDE</span><br>
+        <button onclick="startJob(101)">Start Ride</button>
+        <button onclick="completeJob(101)">Complete</button>
+        <button onclick="trackJob(101)">Track on Map</button>
+        <button onclick="openChat(101,'Thabo')">Chat Customer</button>
+        <div id="map101" class="map"></div>
+      </div>
+      <div class="job-card" data-job-id="201">
+        <h4>Delivery #201 - Pizza Place</h4>
+        <p>Pickup: Pizza Place | Dropoff: Thabo</p>
+        <span class="badge delivery">DELIVERY</span><br>
+        <button onclick="startJob(201)">Start Delivery</button>
+        <button onclick="completeJob(201)">Complete</button>
+        <button onclick="trackJob(201)">Track on Map</button>
+        <button onclick="openChat(201,'Thabo')">Chat Customer</button>
+        <div id="map201" class="map"></div>
+      </div>
     </div>
   </div>
 
-  <div id="map" style="height: 500px;"></div>
+  <div class="section" id="profileSection" style="display:none;">
+    <h2 class="section-title">👤 Profile & Settings</h2>
+    <p><b>Name:</b> Driver Name</p>
+    <p><b>Vehicle:</b> Vehicle Name & Model</p>
+    <p><b>Plate Number:</b> ABC123GP</p>
+    <p><b>Status:</b> Available</p>
+    <div class="profile-photo-section">
+      <h3>Profile Photo</h3>
+      <img id="driverPhotoPreview" src="logo-placeholder.png" alt="Driver Photo">
+      <input type="file" id="driverPhotoUpload" accept="image/*">
+      <button id="savePhotoBtn">Upload Photo</button>
+    </div>
+    <button>Edit Profile</button>
+  </div>
+
+  <div id="chatModal">
+    <div id="chatHeader">Chat</div>
+    <div id="chatMessages"></div>
+    <input type="text" id="chatInput" placeholder="Type your message...">
+    <button id="sendChatBtn">Send</button>
+  </div>
 
   <div class="bottom-nav">
-    <a href="#">🏠 Dashboard</a>
-    <a href="#">🛵 Jobs</a>
-    <a href="#">💰 Earnings</a>
-    <a href="#">👤 Profile</a>
+    <a href="#">🏠<span>Dashboard</span></a>
+    <a href="#">🛵<span>Jobs</span></a>
+    <a href="#">💰<span>Earnings</span></a>
+    <a href="#" id="bottomProfileBtn">👤<span>Profile</span></a>
   </div>
+</div>
 
-  <script src="app.js"></script>
+<script>
+// Initially hide dashboard and pending message
+const dashboard = document.querySelector('.dashboard');
+const pendingMessage = document.getElementById('pendingMessage');
+const driverApplication = document.getElementById('driverApplication');
+
+const applicationForm = document.getElementById('applicationForm');
+applicationForm.addEventListener('submit', e => {
+  e.preventDefault();
+  driverApplication.style.display = 'none';
+  pendingMessage.style.display = 'block';
+  alert("Application submitted! Awaiting approval (up to 7 days).");
+  // Backend would handle approval; after approval, show dashboard:
+  // dashboard.style.display = 'block'; pendingMessage.style.display='none';
+});
+
+// Profile toggle
+const profileBtn=document.getElementById("profileBtn");
+const bottomProfileBtn=document.getElementById("bottomProfileBtn");
+const profileSection=document.getElementById("profileSection");
+profileBtn.addEventListener("click",()=>{profileSection.style.display="block";});
+bottomProfileBtn.addEventListener("click",()=>{profileSection.style.display="block";});
+
+// Chat functionality placeholder
+function openChat(jobId, customerName){
+  const chatModal=document.getElementById("chatModal");
+  chatModal.style.display="block";
+  document.getElementById("chatHeader").textContent="Chat with "+customerName;
+  document.getElementById("chatMessages").innerHTML="<div class='chat-customer'>Hello!</div>";
+}
+document.getElementById("sendChatBtn").addEventListener("click",()=>{
+  const input=document.getElementById("chatInput");
+  const messages=document.getElementById("chatMessages");
+  if(input.value.trim()==="") return;
+  const div=document.createElement("div");
+  div.className="chat-driver chat-message";
+  div.textContent=input.value;
+  messages.appendChild(div);
+  input.value="";
+  messages.scrollTop=messages.scrollHeight;
+});
+
+// Job functions placeholders
+function startJob(jobId){alert("Job #"+jobId+" started!");}
+function completeJob(jobId){alert("Job #"+jobId+" completed!");}
+function trackJob(jobId){alert("Open Google Maps for job #"+jobId);}
+
+// Profile photo upload
+document.getElementById("savePhotoBtn").addEventListener("click",()=>{
+  const fileInput=document.getElementById("driverPhotoUpload");
+  if(fileInput.files[0]){
+    const reader=new FileReader();
+    reader.onload=function(e){document.getElementById("driverPhotoPreview").src=e.target.result;}
+    reader.readAsDataURL(fileInput.files[0]);
+  }
+});
+</script>
 </body>
 </html>
