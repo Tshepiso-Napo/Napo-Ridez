@@ -1,78 +1,108 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #f8f9fa;
-    margin: 0;
-    padding: 0;
-    color: #333;
+  background: #fafafa;
+  color: #222;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
 .container {
-    max-width: 450px;
-    margin: 80px auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  text-align: center;
+  max-width: 500px;
+  width: 90%;
 }
 
-h1 {
-    text-align: center;
-    color: #ff006e;
-    margin-bottom: 40px;
-    font-size: 2rem;
+.logo-img {
+  width: 120px;
+  height: auto;
+  border-radius: 20px;
+  margin-bottom: 0.5rem;
 }
 
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+.tagline {
+  font-size: 1rem;
+  color: #666;
 }
 
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="tel"] {
-    padding: 12px;
-    border-radius: 12px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
+.role-section {
+  margin: 2rem 0;
+}
+.role-section h2 {
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+  font-weight: bold;
 }
 
-button {
-    padding: 12px;
-    background: #ff006e;
-    color: #fff;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
+.roles {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
 }
 
-button:hover {
-    background: #d0006f;
+.role-card {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 1.2rem 0.8rem;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.07);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.role-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
 }
 
-.role-selection {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 10px;
+.icon {
+  font-size: 2rem;
+  margin-bottom: 0.6rem;
+  color: #ff5a00;
+}
+.role-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.3rem;
+}
+.role-card p {
+  font-size: 0.85rem;
+  color: #555;
 }
 
-.password-instructions {
-    display: none;
-    font-size: 0.85rem;
-    color: #555;
-    background: #fff0f6;
-    padding: 10px;
-    border-radius: 12px;
-    border: 1px solid #ff006e;
+.auth-section {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
 }
-
-.switch-form {
-    text-align: center;
-    margin-top: 15px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    color: #ff006e;
+.btn {
+  padding: 0.7rem 1.6rem;
+  border: none;
+  border-radius: 2rem;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background 0.2s, transform 0.2s;
+}
+.btn.primary {
+  background: #ff5a00;
+  color: white;
+}
+.btn.primary:hover {
+  background: #e94e00;
+  transform: scale(1.05);
+}
+.btn.secondary {
+  background: #f0f0f0;
+  color: #222;
+}
+.btn.secondary:hover {
+  background: #ddd;
+  transform: scale(1.05);
 }
