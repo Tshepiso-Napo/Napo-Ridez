@@ -10,6 +10,7 @@
 <body>
   <div class="container">
 
+    <!-- Top Navbar -->
     <header class="top-navbar">
       <img src="Images/1003620f-9e72-43b5-80e0-0a01fa851da6.png" alt="Napo Ridez Logo" class="logo-img">
       <div class="top-icons">
@@ -22,6 +23,7 @@
 
     <div class="main-layout">
 
+      <!-- Sidebar -->
       <aside class="sidebar">
         <div class="profile-section">
           <img src="Images/user-placeholder.png" alt="User Profile" class="profile-img">
@@ -31,11 +33,23 @@
           <button class="btn primary"><i class="fa-solid fa-user"></i> Profile</button>
           <button class="btn primary"><i class="fa-solid fa-clock-rotate-left"></i> History</button>
           <button class="btn primary"><i class="fa-solid fa-cog"></i> Settings</button>
+          <button class="btn primary"><i class="fa-solid fa-credit-card"></i> Payments</button>
+          <button class="btn primary"><i class="fa-solid fa-headset"></i> Support</button>
+          <button class="btn primary"><i class="fa-solid fa-comments"></i> Chat</button>
         </nav>
       </aside>
 
+      <!-- Main Content -->
       <main class="main-content">
         <h2>Customer Dashboard</h2>
+
+        <!-- Search Bar -->
+        <div class="search-bar">
+          <input type="text" placeholder="Search restaurants, shops, or rides...">
+          <button class="btn primary"><i class="fa-solid fa-search"></i></button>
+        </div>
+
+        <!-- Role Cards -->
         <div class="role-cards">
           <button class="role-card">
             <div class="icon"><i class="fa-solid fa-car-side"></i></div>
@@ -47,17 +61,38 @@
             <h3>Order Food</h3>
             <p>Get meals delivered from local vendors</p>
           </button>
-         <button class="role-card shop">
-  <div class="icon"><i class="fa-solid fa-bag-shopping"></i></div>
-  <h3>Shop Nearby</h3>
-  <p>Clothes, electronics, and more</p>
-</button>
-
+          <button class="role-card shop">
+            <div class="icon"><i class="fa-solid fa-bag-shopping"></i></div>
+            <h3>Shop Nearby</h3>
+            <p>Clothes, electronics, and more</p>
+          </button>
         </div>
+
+        <!-- Promos Section -->
+        <section class="promos">
+          <h3>Special Offers</h3>
+          <p>No active promotions at the moment.</p>
+        </section>
       </main>
 
     </div>
 
+  </div>
+
+  <!-- Chat Window Placeholder -->
+  <div class="chat-window" style="display:none;">
+    <div class="chat-header">
+      <h4>Chat with your driver/vendor</h4>
+      <button class="btn secondary">Close</button>
+    </div>
+    <div class="chat-messages">
+      <p><strong>Driver:</strong> On my way!</p>
+      <p><strong>You:</strong> Great, thanks!</p>
+    </div>
+    <div class="chat-input">
+      <input type="text" placeholder="Type a message...">
+      <button class="btn primary"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
   </div>
 </body>
 </html>
