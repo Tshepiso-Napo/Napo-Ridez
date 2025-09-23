@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Napo Ridez - Sign Up</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <img src="Images/1003620f-9e72-43b5-80e0-0a01fa851da6.png" alt="Napo Ridez Logo" class="logo-img">
+      <p class="tagline">Simple • Fast • Kasi Vibes</p>
+    </header>
+
+    <main class="auth-main">
+      <h2>Sign Up</h2>
+      <form class="auth-form">
+        <input type="text" placeholder="Full Name" required>
+        <input type="email" placeholder="Email" required>
+        <input type="tel" placeholder="Phone Number" required>
+        <input type="password" placeholder="Password" id="signup-password" required>
+        <p>Password must be at least 8 characters long</p>
+        <div class="show-password">
+          <input type="checkbox" id="show-signup-pass">
+          <label for="show-signup-pass">Show Password</label>
+        </div>
+        <select name="role" required>
+          <option value="">Select Role</option>
+          <option value="customer">Customer</option>
+          <option value="vendor">Vendor</option>
+          <option value="driver">Driver</option>
+        </select>
+        <div class="vendor-driver-docs" style="display:none;">
+          <label>Upload Documents</label>
+          <input type="file" multiple>
+        </div>
+        <button class="btn primary" type="submit">Sign Up</button>
+      </form>
+      <p>Already have an account? <a href="login.html">Login</a></p>
+    </main>
+  </div>
+
+  <script>
+    const roleSelect = document.querySelector('select[name="role"]');
+    const docsSection = document.querySelector('.vendor-driver-docs');
+    const showSignupPass = document.getElementById('show-signup-pass');
+    const signupPassword = document.getElementById('signup-password');
+
+    roleSelect.addEventListener('change', () => {
+      if(roleSelect.value === 'vendor' || roleSelect.value === 'driver') {
+        docsSection.style.display = 'block';
+      } else {
+        docsSection.style.display = 'none';
+      }
+    });
+
+    showSignupPass.addEventListener('change', () => {
+      signupPassword.type = showSignupPass.checked ? 'text' : 'password';
+    });
+  </script>
+</body>
+</html>
