@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Napo Ridez - Login</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <img src="Images/1003620f-9e72-43b5-80e0-0a01fa851da6.png" alt="Napo Ridez Logo" class="logo-img">
+      <p class="tagline">Simple • Fast • Kasi Vibes</p>
+    </header>
+
+    <main class="auth-main">
+      <h2>Login</h2>
+      <form class="auth-form">
+        <input type="email" placeholder="Email" required>
+        <input type="password" placeholder="Password" id="login-password" required>
+        <div class="show-password">
+          <input type="checkbox" id="show-login-pass">
+          <label for="show-login-pass">Show Password</label>
+        </div>
+        <button class="btn primary" type="submit">Login</button>
+        <p><a href="#">Forgot Password?</a></p>
+      </form>
+      <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
+    </main>
+  </div>
+
+  <script>
+    const showLoginPass = document.getElementById('show-login-pass');
+    const loginPassword = document.getElementById('login-password');
+    showLoginPass.addEventListener('change', () => {
+      loginPassword.type = showLoginPass.checked ? 'text' : 'password';
+    });
+  </script>
+</body>
+</html>
