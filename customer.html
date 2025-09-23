@@ -9,37 +9,51 @@
 </head>
 <body>
   <div class="container">
-    <header class="header">
+
+    <header class="top-navbar">
       <img src="Images/1003620f-9e72-43b5-80e0-0a01fa851da6.png" alt="Napo Ridez Logo" class="logo-img">
-      <p class="tagline">Simple • Fast • Kasi Vibes</p>
+      <div class="top-icons">
+        <button class="btn primary"><i class="fa-solid fa-cart-shopping"></i></button>
+      </div>
     </header>
 
-    <section class="role-section">
-      <h2>Customer Dashboard</h2>
-      <div class="roles">
-        <button class="role-card">
-          <div class="icon"><i class="fa-solid fa-car-side"></i></div>
-          <h3>Book a Ride</h3>
-          <p>Get to your destination quickly</p>
-        </button>
-        <button class="role-card">
-          <div class="icon"><i class="fa-solid fa-burger"></i></div>
-          <h3>Order Food</h3>
-          <p>Get meals delivered from local vendors</p>
-        </button>
-        <button class="role-card">
-          <div class="icon"><i class="fa-solid fa-store"></i></div>
-          <h3>Shop Nearby</h3>
-          <p>Order from kasi shops and spazas</p>
-        </button>
-      </div>
-    </section>
+    <div class="main-layout">
 
-    <footer class="auth-section">
-      <button class="btn primary"><i class="fa-solid fa-user"></i> Profile</button>
-      <button class="btn primary"><i class="fa-solid fa-clock-rotate-left"></i> History</button>
-      <button class="btn primary"><i class="fa-solid fa-cart-shopping"></i> Cart</button>
-    </footer>
+      <aside class="sidebar">
+        <div class="profile-section">
+          <img src="Images/user-placeholder.png" alt="User Profile" class="profile-img">
+          <h3>Tshepiso Michael</h3>
+        </div>
+        <nav class="sidebar-nav">
+          <button class="btn primary"><i class="fa-solid fa-user"></i> Profile</button>
+          <button class="btn primary"><i class="fa-solid fa-clock-rotate-left"></i> History</button>
+          <button class="btn primary"><i class="fa-solid fa-cog"></i> Settings</button>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <h2>Customer Dashboard</h2>
+        <div class="role-cards">
+          <button class="role-card">
+            <div class="icon"><i class="fa-solid fa-car-side"></i></div>
+            <h3>Book a Ride</h3>
+            <p>Get to your destination quickly</p>
+          </button>
+          <button class="role-card">
+            <div class="icon"><i class="fa-solid fa-burger"></i></div>
+            <h3>Order Food</h3>
+            <p>Get meals delivered from local vendors</p>
+          </button>
+          <button class="role-card">
+            <div class="icon"><i class="fa-solid fa-store"></i></div>
+            <h3>Shop Nearby</h3>
+            <p>Order from kasi shops and spazas</p>
+          </button>
+        </div>
+      </main>
+
+    </div>
+
   </div>
 </body>
 </html>
