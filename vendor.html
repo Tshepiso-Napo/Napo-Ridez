@@ -1,243 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Napo Ridez - Vendor Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Roboto',sans-serif;}
-body{background:#f5f5f5;color:#333;padding-bottom:100px;}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:15px 20px;background:#3a0ca3;color:#fff;position:fixed;top:0;width:100%;z-index:100;border-bottom:2px solid #ffbe0b;border-radius:0 0 12px 12px;}
-.topbar img{width:50px;border-radius:50%;}
-.topbar h2{flex:1;text-align:center;font-size:20px;font-weight:700;}
-.icons{display:flex;gap:15px;font-size:22px;cursor:pointer;position:relative;}
-.icons span{position:relative;}
-.icons .badge{position:absolute;top:-8px;right:-8px;background:#ff4b2b;color:#fff;border-radius:50%;padding:2px 6px;font-size:12px;}
-.dashboard{margin-top:90px;padding:15px;display:none;}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:15px;margin-bottom:25px;}
-.card{background:#fff;border-radius:15px;padding:15px;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,0.1);}
-.card h3{font-size:1.4rem;color:#e63946;margin-bottom:5px;}
-.card p{color:#555;font-size:0.9rem;}
-.section-title{margin:20px 0 10px;font-size:1.3rem;color:#3a0ca3;font-weight:700;}
-.section{margin-bottom:20px;}
-.order-card{background:#fff;border-radius:15px;padding:15px;margin-bottom:15px;box-shadow:0 4px 10px rgba(0,0,0,0.05);}
-.order-card h4{margin-bottom:5px;}
-.order-card p{margin-bottom:8px;color:#555;font-size:0.9rem;}
-.order-card .status{display:inline-block;padding:3px 8px;border-radius:8px;font-size:0.8rem;color:#fff;margin-bottom:8px;}
-.status.pending{background:#ffbe0b;}
-.status.ready{background:#28a745;}
-.order-card button{background:#3a0ca3;color:#fff;border:none;padding:6px 10px;border-radius:8px;cursor:pointer;margin-right:5px;margin-bottom:5px;}
-.order-card button:hover{background:#7209b7;}
-.driver-list-card{background:#f5f5f5;border-radius:12px;padding:10px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;}
-.driver-list-card:hover{background:#e0e0e0;}
-.driver-list-card span{font-size:0.9rem;color:#333;}
-.driver-map{height:200px;width:100%;border-radius:12px;margin-top:10px;display:none;}
-.menu-card{display:flex;align-items:center;justify-content:space-between;background:#fff;border-radius:12px;padding:10px;margin-bottom:10px;box-shadow:0 2px 6px rgba(0,0,0,0.05);}
-.menu-card img{width:50px;height:50px;border-radius:8px;margin-right:10px;}
-.menu-card-details{flex:1;}
-.menu-card-actions span{cursor:pointer;font-size:1.2rem;margin-left:8px;}
-#chatModal,#driverModal,#applicationForm,#pendingMessage{display:none;position:fixed;bottom:10px;right:10px;width:320px;background:#fff;border:1px solid #ccc;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.3);z-index:200;padding:10px;}
-#chatMessages{height:200px;overflow-y:auto;border-bottom:1px solid #eee;padding-bottom:5px;margin-bottom:5px;}
-.chat-message{margin:5px 0;padding:6px 10px;border-radius:12px;}
-.chat-customer{background:#f1f1f1;text-align:left;}
-.chat-vendor{background:#3a0ca3;color:#fff;text-align:right;}
-#chatInput,#driverModal button,#applicationForm input,#applicationForm select,#applicationForm textarea,#applicationForm button{width:100%;padding:6px;border-radius:8px;border:1px solid #ccc;margin-bottom:5px;}
-#sendChatBtn,#driverModal button,#applicationForm button{background:#3a0ca3;color:#fff;border:none;}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-around;background:#fff;border-top:1px solid #ddd;padding:10px 0;}
-.bottom-nav a{text-decoration:none;color:#333;font-size:0.9rem;display:flex;flex-direction:column;align-items:center;}
-.bottom-nav a span{margin-top:2px;}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Napo Ridez - Vendor</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
+  <div class="container">
 
-<div class="topbar">
-<img src="Images/IMG_20250912_035555_769.jpg" alt="Napo Ridez Logo">
-<h2 id="vendorName">Vendor Dashboard</h2>
-<div class="icons">
-<span id="notifications">🔔<span class="badge" id="notifCount">0</span></span>
-<span id="profileBtn">👤</span>
-</div>
-</div>
+    <header class="top-navbar">
+      <img src="Images/1003620f-9e72-43b5-80e0-0a01fa851da6.png" alt="Napo Ridez Logo" class="logo-img">
+      <div class="top-icons">
+        <button class="btn primary">
+          <i class="fa-solid fa-bell"></i>
+        </button>
+        <button class="btn primary">
+          <i class="fa-solid fa-wallet"></i> R1200
+        </button>
+      </div>
+    </header>
 
-<!-- Vendor Application Form -->
-<div id="applicationForm">
-<h3>Vendor Application</h3>
-<p><b>Note:</b> Please upload your ID copy.</p>
-<input type="text" id="businessName" placeholder="Business Name">
-<input type="text" id="ownerName" placeholder="Owner Full Name">
-<input type="text" id="address" placeholder="Address / Area / Location">
-<select id="businessType">
-<option value="">Select Business Type</option>
-<option value="Restaurant">Restaurant</option>
-<option value="Grocery">Grocery</option>
-<option value="Pharmacy">Pharmacy</option>
-<option value="Other">Other</option>
-</select>
-<input type="text" id="regNumber" placeholder="Business Registration Number (optional)">
-<input type="email" id="email" placeholder="Contact Email">
-<input type="text" id="phone" placeholder="Contact Phone">
-<input type="text" id="categories" placeholder="Categories you sell (comma separated)">
-<textarea id="products" placeholder="Main Products / Menu Items"></textarea>
-<input type="file" id="idCopy" accept="image/*,.pdf">
-<button id="submitApplication">Submit Application</button>
-</div>
+    <div class="main-layout">
 
-<div id="pendingMessage">
-<h3>Application Pending</h3>
-<p>Your application is under review. Approval may take up to 7 days.</p>
-</div>
+      <aside class="sidebar">
+        <div class="profile-section">
+          <img src="Images/vendor-placeholder.png" alt="Vendor Profile" class="profile-img">
+          <h3>Vendor Name</h3>
+        </div>
+        <nav class="sidebar-nav">
+          <button class="btn primary"><i class="fa-solid fa-box"></i> Products</button>
+          <button class="btn primary"><i class="fa-solid fa-list-check"></i> Orders</button>
+          <button class="btn primary"><i class="fa-solid fa-chart-line"></i> Earnings</button>
+          <button class="btn primary"><i class="fa-solid fa-bullhorn"></i> Promotions</button>
+          <button class="btn primary"><i class="fa-solid fa-message"></i> Chat</button>
+          <button class="btn primary"><i class="fa-solid fa-cog"></i> Settings</button>
+        </nav>
+      </aside>
 
-<!-- Vendor Dashboard -->
-<div class="dashboard" id="vendorDashboard">
-<div class="stats">
-<div class="card"><h3>0</h3><p>Orders Today</p></div>
-<div class="card"><h3>R0</h3><p>Revenue</p></div>
-<div class="card"><h3>Top Product</h3><p>–</p></div>
-<div class="card"><h3>0</h3><p>Pending</p></div>
-</div>
+      <main class="main-content">
+        <h2>Vendor Dashboard</h2>
 
-<div class="section">
-<h2 class="section-title">📦 Active Orders</h2>
-<div id="activeOrders"></div>
-</div>
+        <div class="role-cards">
+          <button class="role-card">
+            <div class="icon"><i class="fa-solid fa-list-check"></i></div>
+            <h3>Active Orders</h3>
+            <p>5 ongoing</p>
+          </button>
+          <button class="role-card">
+            <div class="icon"><i class="fa-solid fa-box"></i></div>
+            <h3>Total Products</h3>
+            <p>28 listed</p>
+          </button>
+          <button class="role-card">
+            <div class="icon"><i class="fa-solid fa-wallet"></i></div>
+            <h3>Today’s Earnings</h3>
+            <p>R350</p>
+          </button>
+          <button class="role-card">
+            <div class="icon"><i class="fa-solid fa-bullhorn"></i></div>
+            <h3>Promotions</h3>
+            <p>Create offers for customers</p>
+          </button>
+        </div>
 
-<div class="section">
-<h2 class="section-title">🍔 Menu Management</h2>
-<div id="menuManagement"></div>
-</div>
+        <section class="promos">
+          <h3>Manage Products</h3>
+          <button class="btn primary"><i class="fa-solid fa-plus"></i> Add Product</button>
+          <div class="role-cards">
+            <div class="role-card">
+              <div class="icon"><i class="fa-solid fa-burger"></i></div>
+              <h3>Burger Combo</h3>
+              <p>R50</p>
+              <div class="product-actions">
+                <button class="btn primary"><i class="fa-solid fa-pen"></i> Edit</button>
+                <button class="btn primary"><i class="fa-solid fa-trash"></i> Delete</button>
+              </div>
+            </div>
+            <div class="role-card">
+              <div class="icon"><i class="fa-solid fa-shirt"></i></div>
+              <h3>T-Shirt</h3>
+              <p>R120</p>
+              <div class="product-actions">
+                <button class="btn primary"><i class="fa-solid fa-pen"></i> Edit</button>
+                <button class="btn primary"><i class="fa-solid fa-trash"></i> Delete</button>
+              </div>
+            </div>
+            <div class="role-card">
+              <div class="icon"><i class="fa-solid fa-laptop"></i></div>
+              <h3>Laptop</h3>
+              <p>R3500</p>
+              <div class="product-actions">
+                <button class="btn primary"><i class="fa-solid fa-pen"></i> Edit</button>
+                <button class="btn primary"><i class="fa-solid fa-trash"></i> Delete</button>
+              </div>
+            </div>
+          </div>
+        </section>
 
-<div class="section">
-<h2 class="section-title">💰 Earnings Overview</h2>
-<div class="stats">
-<div class="card"><h3>R0</h3><p>Weekly Revenue</p></div>
-<div class="card"><h3>R0</h3><p>Monthly Revenue</p></div>
-<div class="card"><h3>–</h3><p>Top Customer</p></div>
-</div>
-</div>
+        <section class="promos">
+          <h3>Recent Orders</h3>
+          <div class="role-cards">
+            <div class="role-card">
+              <p><strong>Order #1024</strong> - Burger Combo - Pending</p>
+              <button class="btn secondary"><i class="fa-solid fa-map-marker-alt"></i> View on Map</button>
+            </div>
+            <div class="role-card">
+              <p><strong>Order #1023</strong> - T-Shirt - Out for Delivery</p>
+              <button class="btn secondary"><i class="fa-solid fa-map-marker-alt"></i> View on Map</button>
+            </div>
+            <div class="role-card">
+              <p><strong>Order #1022</strong> - Laptop - Completed</p>
+              <button class="btn secondary"><i class="fa-solid fa-map-marker-alt"></i> View on Map</button>
+            </div>
+          </div>
+        </section>
 
-<div class="section" id="profileSection" style="display:none;">
-<h2 class="section-title">👤 Profile & Settings</h2>
-<p><b>Vendor Name:</b> –</p>
-<p><b>Address:</b> –</p>
-<p><b>Operating Hours:</b> –</p>
-<button>Edit Profile</button>
-</div>
-</div>
+      </main>
+    </div>
 
-<div id="chatModal">
-<div id="chatMessages"></div>
-<input type="text" id="chatInput" placeholder="Type your message...">
-<button id="sendChatBtn">Send</button>
-</div>
+    <div class="chat-window" id="chat-window">
+      <div class="chat-header">
+        <span>Chat with Customer/Driver</span>
+        <i class="fa-solid fa-xmark"></i>
+      </div>
+      <div class="chat-messages">
+        <p><strong>Customer:</strong> Is my order ready?</p>
+        <p><strong>You:</strong> Yes, it will be out in 10 minutes.</p>
+      </div>
+      <div class="chat-input">
+        <input type="text" placeholder="Type a message...">
+        <button class="btn primary"><i class="fa-solid fa-paper-plane"></i></button>
+      </div>
+    </div>
 
-<div id="driverModal">
-<h3>Select Driver</h3>
-<div class="driver-list" id="driverList"></div>
-<button onclick="closeDriverModal()">Close</button>
-</div>
-
-<div class="bottom-nav">
-<a href="#">🏠<span>Dashboard</span></a>
-<a href="#">📦<span>Orders</span></a>
-<a href="#">🍔<span>Menu</span></a>
-<a href="#">💰<span>Earnings</span></a>
-<a href="#" id="bottomProfileBtn">👤<span>Profile</span></a>
-</div>
-
-<script>
-// Approval Status Simulation
-let isApproved = false; // Change to true to test approved vendor
-const vendorDashboard=document.getElementById("vendorDashboard");
-const applicationForm=document.getElementById("applicationForm");
-const pendingMessage=document.getElementById("pendingMessage");
-
-function checkApproval(){
-    if(isApproved){
-        applicationForm.style.display="none";
-        pendingMessage.style.display="none";
-        vendorDashboard.style.display="block";
-    }else{
-        vendorDashboard.style.display="none";
-        applicationForm.style.display="block";
-        pendingMessage.style.display="none"; // after submitting, we show pending
-    }
-}
-checkApproval();
-
-// Submit Application
-document.getElementById("submitApplication").addEventListener("click",()=>{
-    const idFile=document.getElementById("idCopy").files[0];
-    if(!idFile){alert("Please upload your ID copy."); return;}
-    const applicationData={
-        businessName: document.getElementById("businessName").value,
-        ownerName: document.getElementById("ownerName").value,
-        address: document.getElementById("address").value,
-        businessType: document.getElementById("businessType").value,
-        regNumber: document.getElementById("regNumber").value,
-        email: document.getElementById("email").value,
-        phone: document.getElementById("phone").value,
-        categories: document.getElementById("categories").value,
-        products: document.getElementById("products").value,
-        idCopy: idFile
-    };
-    console.log("Application submitted:",applicationData);
-    applicationForm.style.display="none";
-    pendingMessage.style.display="block";
-    alert("Application submitted! Pending approval (up to 7 days).");
-});
-
-// Profile toggle
-const profileBtn=document.getElementById("profileBtn");
-const bottomProfileBtn=document.getElementById("bottomProfileBtn");
-const profileSection=document.getElementById("profileSection");
-profileBtn.addEventListener("click",()=>{profileSection.style.display=profileSection.style.display==='none'?'block':'none';});
-bottomProfileBtn.addEventListener("click",()=>{profileSection.style.display=profileSection.style.display==='none'?'block':'none';});
-
-// Chat
-let currentChatOrder=null;
-function openChat(orderId){
-    currentChatOrder=orderId;
-    document.getElementById("chatModal").style.display="block";
-}
-document.getElementById("sendChatBtn").addEventListener("click",()=>{
-    const input=document.getElementById("chatInput");
-    if(input.value.trim()==="") return;
-    const msg=document.createElement("div");
-    msg.className="chat-message chat-vendor";
-    msg.textContent=input.value;
-    document.getElementById("chatMessages").appendChild(msg);
-    input.value="";
-    document.getElementById("chatMessages").scrollTop=document.getElementById("chatMessages").scrollHeight;
-});
-
-// Drivers & Orders (dummy data)
-const drivers=[{name:"Driver A",lat:-26.2041,lng:28.0473},{name:"Driver B",lat:-26.205,lng:28.048},{name:"Driver C",lat:-26.206,lng:28.049}];
-let assignedDrivers={};
-function openDriverModal(orderId){
-    document.getElementById("driverModal").style.display="block";
-    const listDiv=document.getElementById("driverList");
-    listDiv.innerHTML="";
-    drivers.forEach((d,i)=>{
-        const div=document.createElement("div");
-        div.className="driver-list-card";
-        div.innerHTML=`<span>${d.name} • 1.2km • ⭐4.8</span>`;
-        div.onclick=()=>{assignedDrivers[orderId]=i;alert(d.name+" assigned to order #"+orderId);closeDriverModal();}
-        listDiv.appendChild(div);
-    });
-}
-function closeDriverModal(){document.getElementById("driverModal").style.display="none";}
-
-function trackDriver(orderId){
-    const driverIndex=assignedDrivers[orderId];
-    if(driverIndex===undefined){alert("No driver assigned yet!"); return;}
-    const mapDiv=document.getElementById("driverMap"+orderId);
-    mapDiv.style.display="block";
-    const driver=drivers[driverIndex];
-    const map=new google.maps.Map(mapDiv,{center:{lat:driver.lat,lng:driver.lng},zoom:14});
-    new google.maps.Marker({position:{lat:driver.lat,lng:driver.lng},map,map});
-}
-</script>
+  </div>
 </body>
 </html>
